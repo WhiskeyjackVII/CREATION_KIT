@@ -1,3 +1,5 @@
+// @author betts.euan@yahoo.com
+
 function Actor(posX, posY, width, height, speed, image, name){
 	
 	console.log("MAKING ACTOR");
