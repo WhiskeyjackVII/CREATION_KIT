@@ -45,10 +45,8 @@ I_CollisionCommand.prototype.setup = function(actorOne,actorTwo){
         this.actorOne = actorOne;
         this.actorTwo = actorTwo;
     };
-    
 
 ////////////////////A_COLLISION_BASED_COMMAND//////////////////////////////////   
-
 
 KillCommand.prototype = new I_CollisionCommand(null);
 KillCommand.constructor = KillCommand;
@@ -64,11 +62,150 @@ function KillCommand(adCommand){
 }
 
 KillCommand.prototype.execute = function(){
+    console.log("HANDLING_KILL_COMMAND : "+ Date.now());
         this.actorTwo.setDead();
         if(this.adCommand !== null){
+            console.log("HANDLING_ADDITIONAL_COMMAND : "+ Date.now());
             this.adCommand.setup(this.actorOne,this.actorTwo);
             this.adCommand.execute();
+            console.log("ADDITIONAL_COMMAND_HANDLED : "+ Date.now());
         }
+    console.log("KILL_COMMAND_HANDLED : "+ Date.now());
     };
 
-//////////////////////////////////////////////////////////////////////////////
+//////////////A_COLLISION_BASED_COMMAND////////////////////////////////////////
+
+ScoreCommand.prototype = new I_CollisionCommand(null);
+ScoreCommand.constructor = ScoreCommand;
+function ScoreCommand(adCommand){
+    var actorOne;
+    var actorTwo;
+    
+    this.adCommand = adCommand;
+    
+    return this.ScoreCommand;
+}
+
+ScoreCommand.prototype.execute = function(){
+    console.log("HANDLING_SCORE_COMMAND : "+ Date.now());
+    this.actorOne.addScore(this.actorTwo.getScore());
+    if(this.adCommand !== null){
+            console.log("HANDLING_ADDITIONAL_COMMAND : "+ Date.now());
+            this.adCommand.setup(this.actorOne,this.actorTwo);
+            this.adCommand.execute();
+            console.log("ADDITIONAL_COMMAND_HANDLED : "+ Date.now());
+        }
+    console.log("SCORE_COMMAND_HANDLED : "+ Date.now());
+    
+};
+
+////////A_COLLISION_BASED_COMMAND///////////////////////////////////////////
+
+BounceOneActor.prototype = new I_CollisionCommand(null);
+BounceOneActor.constructor = BounceOneActor;
+function BounceOneActor(adCommand){
+    var actorOne;
+    var actorTwo;
+    
+    this.adCommand = adCommand;
+    
+    return this.BounceOneActor;
+}
+
+BounceOneActor.prototype.execute = function(){
+    console.log("HANDLING_BOUNCE_ONE");
+    this.actorOne.setDx(this.actorOne.getDx * -1);
+    this.actorOne.setDy(this.actorOne.getDy * -1);
+    console.log("BOUNCE_ONE_HANDLED");
+};
+
+////////A_COLLISION_BASED_COMMAND///////////////////////////////////////////
+
+BounceTwoActors.prototype = new I_CollisionCommand(null);
+BounceTwoActors.constructor = BounceTwoActors;
+function BounceTwoActors(adCommand){
+    var actorOne;
+    var actorTwo;
+    
+    this.adCommand = adCommand;
+    
+    return this.BounceTwoActor;
+}
+
+BounceTwoActors.prototype.execute = function(){
+    console.log("HANDLING_BOUNCE_TWO");
+    this.actorOne.setDx(this.actorOne.getDx * -1);
+    this.actorOne.setDy(this.actorOne.getDy * -1);
+    
+    this.actorTwo.setDx(this.actorTwo.getDx * -1);
+    this.actorTwo.setDy(this.actorTwo.getDy * -1);
+    console.log("BOUNCE_TWO_HANDLED");
+};
+
+//////////BASE_MOVEMENT_COMMAND///////////////////////////////////////////////
+
+MoveCommand.prototype = new I_Command;
+MoveCommand.constructor = MoveCommand;
+function MoveCommand(adCommand){
+    var actor;
+    
+    this.adCommand = adCommand;
+}
+
+MoveCommand.prototype.setup = function(actor){
+    this.actor = actor;
+};
+
+/////////UP_COMMAND///////////////////////////////////////////////////////////
+
+UpCommand.prototype = new MoveCommand;
+UpCommand.constructor = UpCommand;
+function UpCommand(adCommand){
+    var actor;
+    this.adCommand = adCommand;
+}
+
+UpCommand.prototype.execute = function(){
+    this.actor.setDy(-1);
+};
+
+/////////DOWN_COMMAND///////////////////////////////////////////////////////////
+
+DownCommand.prototype = new MoveCommand;
+DownCommand.constructor = DownCommand;
+function DownCommand(adCommand){
+    var actor;
+    this.adCommand = adCommand;
+}
+
+DownCommand.prototype.execute = function(){
+    this.actor.setDy(1);
+};
+
+////////LEFT_COMMAND//////////////////////////////////////////////////////////
+
+LeftCommand.prototype = new MoveCommand;
+LeftCommand.constructor = LeftCommand;
+function LeftCommand(adCommand){
+    var actor;
+    this.adCommand = adCommand;
+}
+
+LeftCommand.prototype.execute = function(){
+    this.actor.setDx(-1);
+};
+
+////////RIGHT_COMMAND//////////////////////////////////////////////////////////
+
+RightCommand.prototype = new MoveCommand;
+RightCommand.constructor = RightCommand;
+function RightCommand(adCommand){
+    var actor;
+    this.adCommand = adCommand;
+}
+
+RightCommand.prototype.execute = function(){
+    this.actor.setDx(1);
+};
+
+
