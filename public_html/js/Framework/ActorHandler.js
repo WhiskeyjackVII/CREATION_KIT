@@ -10,12 +10,66 @@ function ActorHandler(){
     var collisionPairs = [];
     var keySets = [];
     
+    collisionPairs[0] = [];
+    collisionPairs[1] = [];
+    collisionPairs[2] = [];
+    collisionPairs[3] = [];
+    collisionPairs[4] = [];
+    collisionPairs[5] = [];
+    collisionPairs[6] = [];
+    
     //DEFAULT KEYSETS
     
-    keySets[0] = [["37",new LeftCommand(null)],["38",new UpCommand(null)],["39",new RightCommand(null)],["40",new DownCommand(null)]];
-    keySets[1] = [["65",new LeftCommand(null)],["87",new UpCommand(null)],["68",new RightCommand(null)],["83",new DownCommand(null)]];
-    keySets[2] = [["73",new LeftCommand(null)],["74",new UpCommand(null)],["75",new RightCommand(null)],["76",new DownCommand(null)]];
-    keySets[3] = [["100",new LeftCommand(null)],["104",new UpCommand(null)],["102",new RightCommand(null)],["98",new DownCommand(null)]];
+    var keyCommands = [];
+    
+    keyCommands[37] = new LeftCommand(null);
+    keyCommands[65] = new LeftCommand(null);
+    keyCommands[73] = new LeftCommand(null);
+    keyCommands[100] = new LeftCommand(null);
+    
+    keyCommands[38] = new UpCommand(null);
+    keyCommands[87] = new UpCommand(null);
+    keyCommands[74] = new UpCommand(null);
+    keyCommands[104] = new UpCommand(null);
+    
+    keyCommands[39] = new RightCommand(null);
+    keyCommands[68] = new RightCommand(null);
+    keyCommands[76] = new RightCommand(null);
+    keyCommands[102] = new RightCommand(null);
+    
+    keyCommands[40] = new DownCommand(null);
+    keyCommands[83] = new DownCommand(null);
+    keyCommands[75] = new DownCommand(null);
+    keyCommands[98] = new DownCommand(null);
+    
+    keySets[0] = [keyCommands[37],keyCommands[38],keyCommands[39],keyCommands[40]];
+    keySets[1] = [keyCommands[65],keyCommands[87],keyCommands[68],keyCommands[83]];
+    keySets[2] = [keyCommands[73],keyCommands[74],keyCommands[76],keyCommands[75]];
+    keySets[3] = [keyCommands[100],keyCommands[104],keyCommands[102],keyCommands[98]];
+    
+    var Key = {
+        _pressed: {},
+
+        
+        isDown: function(keyCode) {
+            return this._pressed[keyCode];
+        },
+  
+        onKeydown: function(event) {
+            this._pressed[event.keyCode] = true;
+        },
+  
+        onKeyup: function(event) {
+            delete this._pressed[event.keyCode];
+        }
+    };
+    
+    window.addEventListener('keyup',function(event){ Key.onKeyup(event);}, false);
+    window.addEventListener('keydown',function(event){ Key.onKeydown(event);}, false);
+    
+    this.setKeyCommand = function(index, command){
+        keyCommands[index] = command;
+    };
     
     //ACTOR MANAGMENT METHODS
 
@@ -33,7 +87,7 @@ function ActorHandler(){
         players.push(player);
         
         keySets[playerNumber-1].forEach(function(keySet){
-            keySet[1].setup(player);
+            keySet.setup(player);
             
         });
         
@@ -49,38 +103,71 @@ function ActorHandler(){
     //COLLISION HANDLING METHODS
 
     var handleCollisionPairs = function(actorOne){
-        collisionPairs.forEach(function(pair){
-
+        collisionPairs.forEach(function(hitTypes){
+        hitTypes.forEach(function(pair){
 
             if(actorOne.getName() === pair[0]){
-                    actors.forEach(function(actorTwo){
+                actors.forEach(function(actorTwo){
 
-                        if(actorTwo.getName() === pair[1] && actorTwo.checkAlive() === true && actorOne.getGUID()!== actorTwo.getGUID()){
-                            if(detectCollision(actorOne,actorTwo) === true){
-                               console.log("HANDLING COLLISION : "+ Date.now());
-                               pair[2].setup(actorOne,actorTwo);
-                               pair[2].execute();
-                               console.log("COLLISION HANDLED : "+ Date.now());
-                           }
+                    if (actorTwo.getName() === pair[1] && 
+                            actorTwo.checkAlive() === true && 
+                            actorOne.getGUID()!== actorTwo.getGUID()){
+                        
+                        if(detectCollision(actorOne,actorTwo) === true){
+                            console.log("HANDLING COLLISION : "+ Date.now());
+                                pair[2].setup(actorOne,actorTwo);
+                                pair[2].execute();
+                            console.log("COLLISION HANDLED : "+ Date.now());
                         }
+                    }
 
-                    });
+                });
             }
         });
+        });
     };
-    this.registerCollisionCheck = function(actorOne, actorTwo, command){
+    
+    this.registerCollisionCheck = function(actorOne, actorTwo, command, commandType){
         var temp = [actorOne, actorTwo, command];
-        collisionPairs.push(temp);
-
+        collisionPairs[commandType].push(temp);
     };
+    
     var detectCollision = function(actorOne, actorTwo){
-        if (actorOne.getPosX() < actorTwo.getPosX() + actorTwo.getWidth() &&
+        if(actorOne.getPosX() < actorTwo.getPosX() + actorTwo.getWidth() &&
             actorOne.getPosX() + actorOne.getWidth() > actorTwo.getPosX() &&
             actorOne.getPosY() < actorTwo.getPosY() + actorTwo.getHeight() &&
             actorOne.getHeight() + actorOne.getPosY() > actorTwo.getPosY()) {
                return true;
         }
         return false;
+    };
+    
+    var detectCollisionSide = function(actorOne, actorTwo){
+        
+        if(actorOne.getPosX() < actorTwo.getPosX() + actorTwo.getWidth() &&
+            actorOne.getPosX() + actorOne.getWidth() > actorTwo.getPosX()){
+        return 3;
+        }
+        if(actorOne.getPosX() < actorTwo.getPosX() + actorTwo.getWidth()){
+            return 1;
+        }
+        if(actorOne.getPosX() + actorOne.getWidth() > actorTwo.getPosX()){
+            return 2;
+        }
+        
+        if(actorOne.getPosY() < actorTwo.getPosY() + actorTwo.getHeight() &&
+            actorOne.getHeight() + actorOne.getPosY() > actorTwo.getPosY()){
+            return 6;
+        }
+        if(actorOne.getPosY() < actorTwo.getPosY() + actorTwo.getHeight()){
+            return 4;
+        }
+        if(actorOne.getHeight() + actorOne.getPosY() > actorTwo.getPosY()){
+            return 5;
+        }
+        
+        return 0;
+        
     };
     
     
@@ -95,6 +182,12 @@ function ActorHandler(){
 
     };
     this.update = function(){
+        
+        for(var i = 8; i < 123; i++){
+            if(Key.isDown(i))
+                keyCommands[i].execute();
+        }
+        
         actors.forEach(function(actor){
             if(actor.checkAlive() === false){
                 deleteActor(actor);

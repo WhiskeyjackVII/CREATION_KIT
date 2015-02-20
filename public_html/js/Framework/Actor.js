@@ -1,12 +1,14 @@
 // @author betts.euan@yahoo.com
 Actor.constructor = Actor;
-function Actor(posX, posY, score, speed, image, name){
+function Actor(posX, posY, score, speed,constantMovement, image, name){
 	
     console.log("MAKING ACTOR : " + Date.now());
         
     //PRIVALLEGED VARIABLES
+    
     this.score = score;
     this.GUID = guid();
+    this.constantMovement = constantMovement;
         
     //PRIVATE VARIABLES
     var alive = true;
@@ -37,19 +39,38 @@ function Actor(posX, posY, score, speed, image, name){
         return name;
     };
     
-    //DX_DY_METHODS
-    
-    this.setDx = function(dx){
-        this.dx = dx;
+    //MOVEMENT_METHODS
+    this.setConstantMovement = function(move){
+        constantMovement = move;
     };
-    this.setDy = function(dy){
-        this.dy = dy;
+    this.setDx = function(newDx){
+        dx = Number(newDx);
+    };
+    this.setDy = function(newDy){
+        dy = Number(newDy);
     };
     this.getDx = function(){
-        return this.dx;
+        return dx;
     };
     this.getDy = function(){
-        return this.dx;
+        return dx;
+    };
+    this.stop = function(){
+        dx = 0;
+        dy = 0;
+    };
+    
+    this.moveUp = function(){
+        dy = -1;
+    };
+    this.moveDown = function(){
+        dy = 1;
+    };
+    this.moveLeft = function(){
+        dx = -1;
+    };
+    this.moveRight = function(){
+        dx = 1;
     };
     
     //SCORE METHODS
@@ -100,9 +121,13 @@ function Actor(posX, posY, score, speed, image, name){
     };
 
     this.update = function(){
-	posX = Number(posX) + Number(dx*speed);
-	posY = Number(posY) + Number(dy*speed);
 	bounds();
+        posX = Number(posX) + Number(dx*speed);
+	posY = Number(posY) + Number(dy*speed);
+        if(constantMovement !== true){
+            dx = 0;
+            dy = 0;
+        }
     };
 	
     var bounds = function(){

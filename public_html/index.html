@@ -16,9 +16,13 @@
 		
 		<h1>Test</h1>
 		<input type="button" onclick="runGameLoop()" value="Run Game">
-		<input type="button" onclick="addActorOne()" value="Add Actor1">
-                <input type="button" onclick="addActorTwo()" value="Add Actor2">
+		<input type="button" onclick="addActorOne()" value="Add Actor One">
+                <input type="button" onclick="addActorTwo()" value="Add Actor Two">
+                <input type="button" onclick="addPlayer()" value="Add Player">
                 <input type="button" onclick="setup()" value="Setup">
+                
+                <a href="actorCreater.html">Actor Creator</a>
+                
 		<script type='text/javascript'>
       		
                 var CANVAS_WIDTH = 480;
@@ -29,15 +33,17 @@
                 var game_canvas;
                 var game_context;
         	
+                
+                
                     
                 function setup(){
                     
         	game_canvas = document.getElementById("gameCanvas");
                 game_context = game_canvas.getContext("2d");
                 ACTOR_HANDLER = new ActorHandler();
-                ACTOR_HANDLER.registerCollisionCheck("ACTOR_ONE","ACTOR_TWO", new KillCommand(new ScoreCommand(null)));
-                ACTOR_HANDLER.registerCollisionCheck("ACTOR_TWO","ACTOR_TWO", new BounceTwoActors(null));
-       		
+                ACTOR_HANDLER.registerCollisionCheck("ACTOR_ONE","ACTOR_TWO", new KillCommand(new ScoreCommand(null)),0);
+                ACTOR_HANDLER.registerCollisionCheck("ACTOR_ONE","ACTOR_TWO", new BounceOneActorVertical(null),3);
+       		ACTOR_HANDLER.registerCollisionCheck("PLAYER","ACTOR_ONE", new KillCommand(new ScoreCommand(null)),0);
                 CANVAS_WIDTH = game_canvas.width;
                 CANVAS_HEIGHT = game_canvas.height;
                     
@@ -45,17 +51,24 @@
         	
         	function addActorOne(){
                     //Math.floor(Math.random() * 480)
-                    var actor = new Actor(Math.floor(Math.random() * (CANVAS_WIDTH-100)),Math.floor(Math.random() * (CANVAS_HEIGHT-100)),100,5,"js/Framework/actorPlaceHolder01.jpg","ACTOR_ONE");
+                    var actor = new Actor(Math.floor(Math.random() * (CANVAS_WIDTH-100)),Math.floor(Math.random() * (CANVAS_HEIGHT-100)),100,5,true,"js/Framework/actorPlaceHolder01.jpg","ACTOR_ONE");
                     
                     ACTOR_HANDLER.registerActor(actor);
         	}
                 
                 function addActorTwo(){
                     //Math.floor(Math.random() * 480)
-                    var actor = new Actor(Math.floor(Math.random() * (CANVAS_WIDTH-100)),Math.floor(Math.random() * (CANVAS_HEIGHT-100)),150,5,"js/Framework/actorPlaceHolder02.jpg","ACTOR_TWO");
-                    
+                    var actor = new Actor(Math.floor(Math.random() * (CANVAS_WIDTH-100)),Math.floor(Math.random() * (CANVAS_HEIGHT-100)),150,5,true,"js/Framework/actorPlaceHolder02.jpg","ACTOR_TWO");
+                    actor.stop();
                     ACTOR_HANDLER.registerActor(actor);
         	}
+                
+                function addPlayer(){
+                    var player = new Actor(300,300,0,5,false,"js/Framework/actorPlaceHolder03.jpg","PLAYER");
+                    
+                    player.stop();
+                    ACTOR_HANDLER.registerPlayer(player,1);
+                }
         	
         	function runGameLoop(){
         		gameLoop = setInterval(function() {

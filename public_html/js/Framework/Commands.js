@@ -48,6 +48,27 @@ I_CollisionCommand.prototype.setup = function(actorOne,actorTwo){
 
 ////////////////////A_COLLISION_BASED_COMMAND//////////////////////////////////   
 
+
+CollisionAdapterCommand.prototype = new I_CollisionCommand(null);
+CollisionAdapterCommand.constructor = CollisionAdapterCommand;
+function CollisionAdapterCommand(adCommand){
+    var actorOne;
+    var actorTwo;
+    
+    this.adCommand = adCommand;
+    
+    return this.CollisionAdapterCommand;
+}
+CollisionAdapterCommand.prototype.execute = function(){
+    if(this.adCommand !== null){
+        console.log("HANDLING_ADDITIONAL_COMMAND : "+ Date.now());
+            this.adCommand.setup(this.actorOne);
+            this.adCommand.execute();
+        console.log("ADDITIONAL_COMMAND_HANDLED : "+ Date.now());
+    }
+};
+
+////////////////////A_COLLISION_BASED_COMMAND//////////////////////////////////
 KillCommand.prototype = new I_CollisionCommand(null);
 KillCommand.constructor = KillCommand;
 function KillCommand(adCommand){
@@ -66,8 +87,8 @@ KillCommand.prototype.execute = function(){
         this.actorTwo.setDead();
         if(this.adCommand !== null){
             console.log("HANDLING_ADDITIONAL_COMMAND : "+ Date.now());
-            this.adCommand.setup(this.actorOne,this.actorTwo);
-            this.adCommand.execute();
+                this.adCommand.setup(this.actorOne,this.actorTwo);
+                this.adCommand.execute();
             console.log("ADDITIONAL_COMMAND_HANDLED : "+ Date.now());
         }
     console.log("KILL_COMMAND_HANDLED : "+ Date.now());
@@ -101,21 +122,29 @@ ScoreCommand.prototype.execute = function(){
 
 ////////A_COLLISION_BASED_COMMAND///////////////////////////////////////////
 
-BounceOneActor.prototype = new I_CollisionCommand(null);
-BounceOneActor.constructor = BounceOneActor;
-function BounceOneActor(adCommand){
+BounceOneActorVertical.prototype = new I_CollisionCommand(null);
+BounceOneActorVertical.constructor = BounceOneActorVertical;
+function BounceOneActorVertical(adCommand){
     var actorOne;
     var actorTwo;
     
     this.adCommand = adCommand;
     
-    return this.BounceOneActor;
+    return this.BounceOneActorVertical;
 }
 
-BounceOneActor.prototype.execute = function(){
+BounceOneActorVertical.prototype.execute = function(){
     console.log("HANDLING_BOUNCE_ONE");
-    this.actorOne.setDx(this.actorOne.getDx * -1);
-    this.actorOne.setDy(this.actorOne.getDy * -1);
+    
+    this.actorOne.setDy(Number(this.actorOne.getDy) * -1);
+    
+    if(this.adCommand !== null){
+        console.log("HANDLING_ADDITIONAL_COMMAND : "+ Date.now());
+            this.adCommand.setup(this.actorOne, this.actorTwo);
+            this.adCommand.execute();
+        console.log("ADDITIONAL_COMMAND_HANDLED : "+ Date.now());
+    }
+    
     console.log("BOUNCE_ONE_HANDLED");
 };
 
@@ -139,12 +168,20 @@ BounceTwoActors.prototype.execute = function(){
     
     this.actorTwo.setDx(this.actorTwo.getDx * -1);
     this.actorTwo.setDy(this.actorTwo.getDy * -1);
+    
+    if(this.adCommand !== null){
+        console.log("HANDLING_ADDITIONAL_COMMAND : "+ Date.now());
+            this.adCommand.setup(this.actorOne, this.actorTwo);
+            this.adCommand.execute();
+        console.log("ADDITIONAL_COMMAND_HANDLED : "+ Date.now());
+    }
+    
     console.log("BOUNCE_TWO_HANDLED");
 };
 
 //////////BASE_MOVEMENT_COMMAND///////////////////////////////////////////////
 
-MoveCommand.prototype = new I_Command;
+MoveCommand.prototype = new I_Command(null);
 MoveCommand.constructor = MoveCommand;
 function MoveCommand(adCommand){
     var actor;
@@ -154,6 +191,14 @@ function MoveCommand(adCommand){
 
 MoveCommand.prototype.setup = function(actor){
     this.actor = actor;
+    
+    if(this.adCommand !== null){
+        console.log("HANDLING_ADDITIONAL_COMMAND : "+ Date.now());
+            this.adCommand.setup(this.actor);
+            this.adCommand.execute();
+        console.log("ADDITIONAL_COMMAND_HANDLED : "+ Date.now());
+    }
+    
 };
 
 /////////UP_COMMAND///////////////////////////////////////////////////////////
@@ -166,12 +211,20 @@ function UpCommand(adCommand){
 }
 
 UpCommand.prototype.execute = function(){
-    this.actor.setDy(-1);
+    this.actor.moveUp();
+    
+    if(this.adCommand !== null){
+        console.log("HANDLING_ADDITIONAL_COMMAND : "+ Date.now());
+            this.adCommand.setup(this.actor);
+            this.adCommand.execute();
+        console.log("ADDITIONAL_COMMAND_HANDLED : "+ Date.now());
+    }
+    
 };
 
 /////////DOWN_COMMAND///////////////////////////////////////////////////////////
 
-DownCommand.prototype = new MoveCommand;
+DownCommand.prototype = new MoveCommand(null);
 DownCommand.constructor = DownCommand;
 function DownCommand(adCommand){
     var actor;
@@ -179,12 +232,20 @@ function DownCommand(adCommand){
 }
 
 DownCommand.prototype.execute = function(){
-    this.actor.setDy(1);
+    this.actor.moveDown();
+    
+    if(this.adCommand !== null){
+        console.log("HANDLING_ADDITIONAL_COMMAND : "+ Date.now());
+            this.adCommand.setup(this.actor);
+            this.adCommand.execute();
+        console.log("ADDITIONAL_COMMAND_HANDLED : "+ Date.now());
+    }
+    
 };
 
 ////////LEFT_COMMAND//////////////////////////////////////////////////////////
 
-LeftCommand.prototype = new MoveCommand;
+LeftCommand.prototype = new MoveCommand(null);
 LeftCommand.constructor = LeftCommand;
 function LeftCommand(adCommand){
     var actor;
@@ -192,12 +253,20 @@ function LeftCommand(adCommand){
 }
 
 LeftCommand.prototype.execute = function(){
-    this.actor.setDx(-1);
+    this.actor.moveLeft();
+    
+    if(this.adCommand !== null){
+        console.log("HANDLING_ADDITIONAL_COMMAND : "+ Date.now());
+            this.adCommand.setup(this.actor);
+            this.adCommand.execute();
+        console.log("ADDITIONAL_COMMAND_HANDLED : "+ Date.now());
+    }
+    
 };
 
 ////////RIGHT_COMMAND//////////////////////////////////////////////////////////
 
-RightCommand.prototype = new MoveCommand;
+RightCommand.prototype = new MoveCommand(null);
 RightCommand.constructor = RightCommand;
 function RightCommand(adCommand){
     var actor;
@@ -205,7 +274,35 @@ function RightCommand(adCommand){
 }
 
 RightCommand.prototype.execute = function(){
-    this.actor.setDx(1);
+    this.actor.moveRight();
+    
+    if(this.adCommand !== null){
+        console.log("HANDLING_ADDITIONAL_COMMAND : "+ Date.now());
+            this.adCommand.setup(this.actor);
+            this.adCommand.execute();
+        console.log("ADDITIONAL_COMMAND_HANDLED : "+ Date.now());
+    }
+    
 };
 
 
+////////////////STOP_COMMAND////////////////////////////////////////////////
+
+StopCommand.prototype = new MoveCommand(null);
+StopCommand.constructor = StopCommand;
+function StopCommand(adCommand){
+    var actor;
+    this.adCommand = adCommand;
+}
+
+StopCommand.prototype.execute = function(){
+    this.actor.stop();
+    
+    if(this.adCommand !== null){
+        console.log("HANDLING_ADDITIONAL_COMMAND : "+ Date.now());
+            this.adCommand.setup(this.actor);
+            this.adCommand.execute();
+        console.log("ADDITIONAL_COMMAND_HANDLED : "+ Date.now());
+    }
+    
+};
