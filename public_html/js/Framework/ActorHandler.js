@@ -9,14 +9,10 @@ function ActorHandler(){
     var players = [];
     var collisionPairs = [];
     var keySets = [];
-    
-    collisionPairs[0] = [];
-    collisionPairs[1] = [];
-    collisionPairs[2] = [];
-    collisionPairs[3] = [];
-    collisionPairs[4] = [];
-    collisionPairs[5] = [];
-    collisionPairs[6] = [];
+
+//    collisionPairs[0] = [];
+//    collisionPairs[1] = [];
+//    collisionPairs[2] = [];
     
     //DEFAULT KEYSETS
     
@@ -103,8 +99,10 @@ function ActorHandler(){
     //COLLISION HANDLING METHODS
 
     var handleCollisionPairs = function(actorOne){
-        collisionPairs.forEach(function(hitTypes){
-        hitTypes.forEach(function(pair){
+        collisionPairs.forEach(function(pair){
+        
+        //var countType = 0;
+        //hitTypes.forEach(function(pair){
 
             if(actorOne.getName() === pair[0]){
                 actors.forEach(function(actorTwo){
@@ -115,21 +113,25 @@ function ActorHandler(){
                         
                         if(detectCollision(actorOne,actorTwo) === true){
                             console.log("HANDLING COLLISION : "+ Date.now());
-                                pair[2].setup(actorOne,actorTwo);
-                                pair[2].execute();
+                                //var hitType = detectCollisionSide(actorOne,actorTwo);
+                                //if(hitType === countType || hitType === 0){
+                                    pair[2].setup(actorOne,actorTwo);
+                                    pair[2].execute();
+                                //}
                             console.log("COLLISION HANDLED : "+ Date.now());
                         }
                     }
 
                 });
             }
+            //countType++;
         });
-        });
+        //});
     };
     
-    this.registerCollisionCheck = function(actorOne, actorTwo, command, commandType){
+    this.registerCollisionCheck = function(actorOne, actorTwo, command){
         var temp = [actorOne, actorTwo, command];
-        collisionPairs[commandType].push(temp);
+        collisionPairs.push(temp);
     };
     
     var detectCollision = function(actorOne, actorTwo){
@@ -142,33 +144,39 @@ function ActorHandler(){
         return false;
     };
     
-    var detectCollisionSide = function(actorOne, actorTwo){
-        
-        if(actorOne.getPosX() < actorTwo.getPosX() + actorTwo.getWidth() &&
-            actorOne.getPosX() + actorOne.getWidth() > actorTwo.getPosX()){
-        return 3;
-        }
-        if(actorOne.getPosX() < actorTwo.getPosX() + actorTwo.getWidth()){
-            return 1;
-        }
-        if(actorOne.getPosX() + actorOne.getWidth() > actorTwo.getPosX()){
-            return 2;
-        }
-        
-        if(actorOne.getPosY() < actorTwo.getPosY() + actorTwo.getHeight() &&
-            actorOne.getHeight() + actorOne.getPosY() > actorTwo.getPosY()){
-            return 6;
-        }
-        if(actorOne.getPosY() < actorTwo.getPosY() + actorTwo.getHeight()){
-            return 4;
-        }
-        if(actorOne.getHeight() + actorOne.getPosY() > actorTwo.getPosY()){
-            return 5;
-        }
-        
-        return 0;
-        
-    };
+//    var detectCollisionSide = function(actorOne, actorTwo){
+//        
+//        var w = 0.5 * (actorOne.width() + actorTwo.width());
+//        var h = 0.5 * (actorOne.height() + actorTwo.height());
+//        var dx = A.centerX() - B.centerX();
+//        var dy = A.centerY() - B.centerY();
+//
+//        if (abs(dx) <= w && abs(dy) <= h)
+//        {
+//            /* collision! */
+//            var wy = w * dy;
+//            var hx = h * dx;
+//
+//        if (wy > hx){
+//            if (wy > -hx){
+//                /* collision at the top */
+//                return 2;
+//            }else{
+//                /* on the left */
+//                return 1;
+//            }
+//        }else{
+//            if (wy > -hx){
+//                /* on the right */
+//                return 1;
+//            }else{
+//                /* at the bottom */
+//                return 2;
+//            }
+//        }
+//        
+//        }
+//    };
     
     
     //RUNNING METHODS

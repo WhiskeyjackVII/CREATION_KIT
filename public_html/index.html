@@ -41,9 +41,9 @@
         	game_canvas = document.getElementById("gameCanvas");
                 game_context = game_canvas.getContext("2d");
                 ACTOR_HANDLER = new ActorHandler();
-                ACTOR_HANDLER.registerCollisionCheck("ACTOR_ONE","ACTOR_TWO", new KillCommand(new ScoreCommand(null)),0);
-                ACTOR_HANDLER.registerCollisionCheck("ACTOR_ONE","ACTOR_TWO", new BounceOneActorVertical(null),3);
-       		ACTOR_HANDLER.registerCollisionCheck("PLAYER","ACTOR_ONE", new KillCommand(new ScoreCommand(null)),0);
+                ACTOR_HANDLER.registerCollisionCheck("ACTOR_ONE","ACTOR_TWO", new KillCommand(new ScoreCommand(null)));
+       		ACTOR_HANDLER.registerCollisionCheck("PLAYER","ACTOR_ONE", new KillCommand(new ScoreCommand(null)));
+                
                 CANVAS_WIDTH = game_canvas.width;
                 CANVAS_HEIGHT = game_canvas.height;
                     
