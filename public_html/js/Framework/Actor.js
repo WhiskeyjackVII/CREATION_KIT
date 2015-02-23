@@ -1,6 +1,6 @@
 // @author betts.euan@yahoo.com
 Actor.constructor = Actor;
-function Actor(posX, posY, score, speed,constantMovement, image, name){
+function Actor(name, posX, posY, score, speed, constantMovement, image){
 	
     console.log("MAKING ACTOR : " + Date.now());
         
