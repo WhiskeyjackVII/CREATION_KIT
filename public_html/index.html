@@ -42,16 +42,35 @@
         	game_canvas = document.getElementById("gameCanvas");
                 game_context = game_canvas.getContext("2d");
                 ACTOR_HANDLER = new ActorHandler();
-                ACTOR_HANDLER.registerCollisionCheck("ACTOR_ONE","ACTOR_TWO", new KillCommand(new ScoreCommand(null)));
+                
+                ACTOR_HANDLER.registerCollisionCheck("PLAYER","FLOWER_RED", new KillCommand(new ScoreCommand(null)));
+                ACTOR_HANDLER.registerCollisionCheck("PLAYER","FLOWER_BLUE", new KillCommand(new ScoreCommand(null)));
+                ACTOR_HANDLER.registerCollisionCheck("PLAYER","FLOWER_GREEN", new KillCommand(new ScoreCommand(null)));
+                ACTOR_HANDLER.registerCollisionCheck("PLAYER","FLOWER_PURPLE", new KillCommand(new ScoreCommand(null)));
+                
        		ACTOR_HANDLER.registerCollisionCheck("PLAYER","ACTOR_ONE", new KillCommand(new ScoreCommand(null)));
                 
                 ACTOR_FACTORY = new ActorFactory();
-                ACTOR_FACTORY.registerActor("ACTOR_ONE",100,5,true,"js/Framework/actorPlaceHolder01.jpg");
-                ACTOR_FACTORY.registerActor("ACTOR_TWO",150,5,true,"js/Framework/actorPlaceHolder02.jpg");
-                ACTOR_FACTORY.registerActor("PLAYER",0,5,false,"js/Framework/actorPlaceHolder03.jpg");
+                
+                ACTOR_FACTORY.registerActor("SPIDER_BLACK",0,2,true,"images/FotBB/spider_black.jpg");
+                ACTOR_FACTORY.registerActor("SPIDER_RED",0,5,true,"images/FotBB/spider_red.jpg");
+                ACTOR_FACTORY.registerActor("SPIDER_BLUE",0,7,true,"images/FotBB/spider_blue.jpg");
+                ACTOR_FACTORY.registerActor("SPIDER_GREEN",0,10,true,"images/FotBB/spider_green.jpg");
+                
+                ACTOR_FACTORY.registerActor("FLOWER_RED",250,0,true,"images/FotBB/flower_red.jpg");
+                ACTOR_FACTORY.registerActor("FLOWER_BLUE",500,0,true,"images/FotBB/flower_blue.jpg");
+                ACTOR_FACTORY.registerActor("FLOWER_GREEN",750,0,true,"images/FotBB/flower_green.jpg");
+                ACTOR_FACTORY.registerActor("FLOWER_PURPLE",1000,0,true,"images/FotBB/flower_purple.jpg");
+                
+                ACTOR_FACTORY.registerActor("PLAYER",0,7,false,"images/FotBB/bee.jpg");
                 
                 CANVAS_WIDTH = game_canvas.width;
                 CANVAS_HEIGHT = game_canvas.height;
+                
+                for(var i = 0; i <2; i++){
+                    ACTOR_HANDLER.registerActor(ACTOR_FACTORY.createActorRandom("SPIDER_BLACK"));
+                    ACTOR_HANDLER.registerActor(ACTOR_FACTORY.createActorRandom("FLOWER_RED"));
+                }
                     
                 }
         	
