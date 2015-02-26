@@ -17,12 +17,7 @@
 		
 		<h1>Test</h1>
 		<input type="button" onclick="runGameLoop()" value="Run Game">
-		<input type="button" onclick="addActorOne()" value="Add Actor One">
-                <input type="button" onclick="addActorTwo()" value="Add Actor Two">
-                <input type="button" onclick="addPlayer()" value="Add Player">
                 <input type="button" onclick="setup()" value="Setup">
-                
-                <a href="actorCreater.html">Actor Creator</a>
                 
 		<script type='text/javascript'>
       		
@@ -39,60 +34,42 @@
                     
                 function setup(){
                     
-        	game_canvas = document.getElementById("gameCanvas");
-                game_context = game_canvas.getContext("2d");
-                ACTOR_HANDLER = new ActorHandler();
-                
-                ACTOR_HANDLER.registerCollisionCheck("PLAYER","FLOWER_RED", new KillCommand(new ScoreCommand(null)));
-                ACTOR_HANDLER.registerCollisionCheck("PLAYER","FLOWER_BLUE", new KillCommand(new ScoreCommand(null)));
-                ACTOR_HANDLER.registerCollisionCheck("PLAYER","FLOWER_GREEN", new KillCommand(new ScoreCommand(null)));
-                ACTOR_HANDLER.registerCollisionCheck("PLAYER","FLOWER_PURPLE", new KillCommand(new ScoreCommand(null)));
-                
-       		ACTOR_HANDLER.registerCollisionCheck("PLAYER","ACTOR_ONE", new KillCommand(new ScoreCommand(null)));
-                
-                ACTOR_FACTORY = new ActorFactory();
-                
-                ACTOR_FACTORY.registerActor("SPIDER_BLACK",0,2,true,"images/FotBB/spider_black.jpg");
-                ACTOR_FACTORY.registerActor("SPIDER_RED",0,5,true,"images/FotBB/spider_red.jpg");
-                ACTOR_FACTORY.registerActor("SPIDER_BLUE",0,7,true,"images/FotBB/spider_blue.jpg");
-                ACTOR_FACTORY.registerActor("SPIDER_GREEN",0,10,true,"images/FotBB/spider_green.jpg");
-                
-                ACTOR_FACTORY.registerActor("FLOWER_RED",250,0,true,"images/FotBB/flower_red.jpg");
-                ACTOR_FACTORY.registerActor("FLOWER_BLUE",500,0,true,"images/FotBB/flower_blue.jpg");
-                ACTOR_FACTORY.registerActor("FLOWER_GREEN",750,0,true,"images/FotBB/flower_green.jpg");
-                ACTOR_FACTORY.registerActor("FLOWER_PURPLE",1000,0,true,"images/FotBB/flower_purple.jpg");
-                
-                ACTOR_FACTORY.registerActor("PLAYER",0,7,false,"images/FotBB/bee.jpg");
-                
-                CANVAS_WIDTH = game_canvas.width;
-                CANVAS_HEIGHT = game_canvas.height;
-                
-                for(var i = 0; i <2; i++){
-                    ACTOR_HANDLER.registerActor(ACTOR_FACTORY.createActorRandom("SPIDER_BLACK"));
-                    ACTOR_HANDLER.registerActor(ACTOR_FACTORY.createActorRandom("FLOWER_RED"));
-                }
+                    game_canvas = document.getElementById("gameCanvas");
+                    game_context = game_canvas.getContext("2d");
+                    ACTOR_HANDLER = new ActorHandler();
+                    ACTOR_FACTORY = new ActorFactory();
                     
-                }
-        	
-        	function addActorOne(){
-                    //Math.floor(Math.random() * 480)
-                    var actor = ACTOR_FACTORY.createActorRandom("ACTOR_ONE");
-                    
-                    ACTOR_HANDLER.registerActor(actor);
-        	}
+                    CANVAS_WIDTH = game_canvas.width;
+                    CANVAS_HEIGHT = game_canvas.height;
                 
-                function addActorTwo(){
-                    //Math.floor(Math.random() * 480)
-                    var actor = ACTOR_FACTORY.createActorRandom("ACTOR_TWO");
-                    actor.stop();
-                    ACTOR_HANDLER.registerActor(actor);
-        	}
+                    var flowers = ["","flower_red","flower_blue","flower_green","flower_purple"];
+                    var spiders = ["","spider_black","spider_red","spider_blue","spider_green"];
                 
-                function addPlayer(){
-                    var player = ACTOR_FACTORY.createActor("PLAYER",300,300);
+                    for(var i = 1; i <= flowers.length; i++){
+                        ACTOR_HANDLER.registerCollisionCheck("PLAYER",flowers[i], new KillCommand(new ScoreCommand(new AdapterCommand(new CreateActorCommand(new CreateActorCommand(null))))));
+                    }
+                    ACTOR_HANDLER.registerCollisionCheck("PLAYER",spiders[i], new KillCommand(new ScoreCommand(null)));
+                
                     
-                    player.stop();
-                    ACTOR_HANDLER.registerPlayer(player,1);
+                
+                    for(var i = 1; i <= spiders.length; i++){
+                        ACTOR_FACTORY.registerActor(spiders[i],0,3*i,true,"images/FotBB/" + spiders[i] + ".png");
+                    }
+                
+                    for(var i = 1; i <= flowers.length; i++){
+                        ACTOR_FACTORY.registerActor(flowers[i],(250*i),0,true,"images/FotBB/" + flowers[i] + ".png");
+                    }
+                
+                    ACTOR_FACTORY.registerActor("PLAYER",0,7,false,"images/FotBB/bee.png");
+                
+                    
+                    for(var i = 0; i < 2; i++){
+                        ACTOR_HANDLER.registerActor(ACTOR_FACTORY.createActorRandom("spider_black"));
+                        ACTOR_HANDLER.registerActor(ACTOR_FACTORY.createActorRandom("flower_red"));
+                    }
+                    
+                    ACTOR_HANDLER.registerPlayer(ACTOR_FACTORY.createActor("PLAYER",300,300),1);
+                    
                 }
         	
         	function runGameLoop(){
