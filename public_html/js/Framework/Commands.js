@@ -183,9 +183,10 @@ BounceTwoActors.prototype.execute = function(){
 
 CreateActorCommand.prototype = new I_Command(null);
 CreateActorCommand.constructor = CreateActorCommand;
-function CreateActorCommand(adCommand){
+function CreateActorCommand(type,adCommand){
     var actor;
     
+    this.type = type;
     this.adCommand = adCommand;
 }
 
@@ -195,7 +196,7 @@ CreateActorCommand.prototype.setup = function(actor){
 };
 
 CreateActorCommand.prototype.execute = function(){
-    ACTOR_HANDLER.registerActor(ACTOR_FACTORY.createActorRandom(actor));
+    ACTOR_HANDLER.registerActor(ACTOR_FACTORY.createActorRandom(this.type));
     
     console.log("HANDLING_ADDITIONAL_COMMAND : "+ Date.now());
         this.adCommand.setup(this.actor);
