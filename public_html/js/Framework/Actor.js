@@ -22,14 +22,7 @@ function Actor(name, posX, posY, score, speed, constantMovement, animations, wid
     var name = name;
     var animations = animations;
     
-    //IMAGE METHODS
-    
-//    var imageObj = new Image();
-//    imageObj.onload = function() {
-//           width = this.width;
-//           height = this.height;
-//    };
-//    imageObj.src = image;
+ 
     
     //IDENTIFYING METHOD
     

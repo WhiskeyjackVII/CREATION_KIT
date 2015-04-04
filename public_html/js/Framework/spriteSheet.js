@@ -23,9 +23,6 @@ function SpriteSheet(path, frameWidth, frameHeight, rowLength) {
   this.frameHeight = frameHeight;
   this.framesPerRow = rowLength;
   
-  // calculate the number of frames in a row after the image loads
- 
-  
  
   this.image.src = path;
   
@@ -40,14 +37,10 @@ function animation(spritesheet, frameSpeed, startFrame, endFrame) {
   var counter = 0;             // keep track of frame rate
  
  
-  spritesheet.image.onload = function()
-  {
-    spritesheet.framesPerRow = Math.floor(spritesheet.image.width / spritesheet.frameWidth);
-      
     // create the sequence of frame numbers for the animation
     for (var frameNumber = startFrame; frameNumber <= endFrame; frameNumber++)
         animationSequence.push(frameNumber);
-  };
+  
   // Update the animation
   this.update = function() {
  
@@ -84,7 +77,6 @@ function animationRow(spritesheet, frameSpeed, row) {
   
   
   
-    //spritesheet.framesPerRow = Math.floor(spritesheet.image.width / spritesheet.frameWidth);
     
     var startFrame = parseInt(row * spritesheet.framesPerRow);
     var endFrame = parseInt(startFrame + (spritesheet.framesPerRow - 1));
@@ -92,7 +84,7 @@ function animationRow(spritesheet, frameSpeed, row) {
     // create the sequence of frame numbers for the animation
     for (var frameNumber = startFrame; frameNumber <= endFrame; frameNumber++)
         animationSequence.push(frameNumber);
-  //};
+  
   // Update the animation
   this.update = function() {
  
@@ -127,16 +119,14 @@ function animationRowToFrame(spritesheet, frameSpeed, row, endFrame) {
   var currentFrame = 0;        // the current frame to draw
   var counter = 0;  // keep track of frame rate
   
-  spritesheet.image.onload = function()
-  {
-    spritesheet.framesPerRow = Math.floor(spritesheet.image.width / spritesheet.frameWidth);
+
     
     var startFrame = parseInt(row * spritesheet.framesPerRow);
   
     // create the sequence of frame numbers for the animation
     for (var frameNumber = startFrame; frameNumber <= endFrame; frameNumber++)
         animationSequence.push(frameNumber);
-  };
+  
   // Update the animation
   this.update = function() {
  
