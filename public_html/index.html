@@ -9,6 +9,8 @@
                 <script src="js/Framework/GUID_GENERATOR.js" type="text/javascript"></script>
                 <script src="js/Framework/ActorFactory.js" type="text/javascript"></script>
                 <script src="js/Framework/spriteSheet.js" type="text/javascript"></script>
+                <script src="js/Framework/main.js" type="text/javascript"></script>
+                <script src="js/Framework/SpriteManager.js" type="text/javascript"></script>
 	</head>
 	<body>
 	
@@ -17,80 +19,80 @@
 		</canvas>
 		
 		<h1>Test</h1>
-		<input type="button" onclick="runGameLoop()" value="Run Game">
+		<input type="button" onclick="main.runGameLoop()" value="Run Game">
                 <input type="button" onclick="setup()" value="Setup">
                 
 		<script type='text/javascript'>
       		
-                var CANVAS_WIDTH = 480;
-                var CANVAS_HEIGHT = 320;
-                var FPS = 30;
-        	var gameLoop;
-                var ACTION_HANDLER;
-                var game_canvas;
-                var game_context;
-        	var ACTOR_FACTORY;
                 
-                
+                var main = new Main();
                     
                 function setup(){
                     
-                    game_canvas = document.getElementById("gameCanvas");
-                    game_context = game_canvas.getContext("2d");
-                    ACTOR_HANDLER = new ActorHandler();
-                    ACTOR_FACTORY = new ActorFactory();
                     
-                    CANVAS_WIDTH = game_canvas.width;
-                    CANVAS_HEIGHT = game_canvas.height;
-                
+                    main.setup(document.getElementById("gameCanvas"));
+                    
+                    
                     var flowers = ["","flower_red","flower_blue","flower_green","flower_purple","flower_red"];
                     var spiders = ["","spider_black","spider_red","spider_blue","spider_green"];
+                    
+                    main.loadSprites = function(){
+                    
+                        for(var i = 1; i <= spiders.length; i++){
+                            SPRITE_MANAGER.registerSpriteSheet(spiders[i],"images/FotBB/" + spiders[i] + ".png",38,38,1,0);
+                        }
+                    
+                        for(var i = 1; i <= flowers.length-1; i++){
+                            SPRITE_MANAGER.registerSpriteSheet(flowers[i],"images/FotBB/" + flowers[i] + ".png",45,45,1,1);
+                        }
+                    
+                        SPRITE_MANAGER.registerSpriteSheet("PLAYER","images/FotBB/bee_spritesheet.png",50,50,10,0);
+                    
+                    };
                 
-                    for(var i = 1; i <= flowers.length-1; i++){
-                        ACTOR_HANDLER.registerCollisionCheck("PLAYER",flowers[i], new KillCommand(new ScoreCommand(new CollisionAdapterCommand(new CreateActorCommand(flowers[i],new CreateActorCommand(flowers[i+1],null))))));
-                    }
-                    ACTOR_HANDLER.registerCollisionCheck("PLAYER",spiders[i], new KillCommand(new ScoreCommand(null)));
+                    main.loadCollision = function(){
+                        
+                        for(var i = 1; i <= flowers.length-1; i++){
+                            ACTOR_HANDLER.registerCollisionCheck("PLAYER",flowers[i], new KillCommand(new ScoreCommand(new CollisionAdapterCommand(new CreateActorCommand(flowers[i],new CreateActorCommand(flowers[i+1],null))))));
+                        }
+                   
+                    
+                        ACTOR_HANDLER.registerCollisionCheck("PLAYER",spiders[i], new KillCommand(new ScoreCommand(null)));
+                    
+                    };
                 
                     
+                    
+                    
+                    main.loadActors = function(){
+                    
+                        for(var i = 1; i <= spiders.length; i++){
+                        
+                            ACTOR_FACTORY.registerActor(spiders[i],0,3*i,true,SPRITE_MANAGER.getAnimationsFor(spiders[i]),38,38);
+                        }
                 
-                    for(var i = 1; i <= spiders.length; i++){
-                        ACTOR_FACTORY.registerActor(spiders[i],0,3*i,true,"images/FotBB/" + spiders[i] + ".png");
-                    }
-                
-                    for(var i = 1; i <= flowers.length-1; i++){
-                        ACTOR_FACTORY.registerActor(flowers[i],(250*i),0,true,"images/FotBB/" + flowers[i] + ".png");
-                    }
-                
-                    ACTOR_FACTORY.registerActor("PLAYER",0,7,false,"images/FotBB/bee.png");
+                        for(var i = 1; i <= flowers.length-1; i++){
+                            
+                            ACTOR_FACTORY.registerActor(flowers[i],(250*i),0,true,SPRITE_MANAGER.getAnimationsFor(flowers[i]),45,45);
+                        }
+                    
+                    
+                    
+                        ACTOR_FACTORY.registerActor("PLAYER",0,7,false,SPRITE_MANAGER.getAnimationsFor("PLAYER"),50,50);
                 
                     
-                    for(var i = 0; i < 2; i++){
-                        ACTOR_HANDLER.registerActor(ACTOR_FACTORY.createActorRandom("spider_black"));
-                        ACTOR_HANDLER.registerActor(ACTOR_FACTORY.createActorRandom("flower_red"));
-                    }
+                        for(var i = 0; i < 2; i++){
+                            ACTOR_HANDLER.registerActor(ACTOR_FACTORY.createActorRandom("spider_black"));
+                            ACTOR_HANDLER.registerActor(ACTOR_FACTORY.createActorRandom("flower_red"));
+                        }
                     
-                    ACTOR_HANDLER.registerPlayer(ACTOR_FACTORY.createActor("PLAYER",300,300),1);
+                        ACTOR_HANDLER.registerPlayer(ACTOR_FACTORY.createActor("PLAYER",300,300),1);
+                    };
                     
+                    main.init();
                 }
         	
-        	function runGameLoop(){
-        		gameLoop = setInterval(function() {
-                            
-                            draw();
-                            update();
-        		}, 1000/FPS);
-        	}
-        	function draw() {
-                   // console.log("DRAWING STARTING");
-                    game_context.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
-        		ACTOR_HANDLER.drawActors();
-                    //console.log("DRAWING FINISHED");
-        	}
-        	function update(){
-                    //console.log("UPADTING STARTING");
-        		ACTOR_HANDLER.update();
-                    //console.log("UPADTING FINISHED");
-        	}
+        	
         	
         	
         	

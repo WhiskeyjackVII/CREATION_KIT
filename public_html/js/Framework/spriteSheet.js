@@ -17,45 +17,151 @@
  * MA 02110-1301  USA
  */
 
-function spriteSheet(path, frameHeight, frameWidth, frameSpeed, endFrame){
-   
-    var image = new Image();
-    var framesPerRow;
+function SpriteSheet(path, frameWidth, frameHeight, rowLength) {
+  this.image = new Image();
+  this.frameWidth = frameWidth;
+  this.frameHeight = frameHeight;
+  this.framesPerRow = rowLength;
+  
+  // calculate the number of frames in a row after the image loads
  
-    // calculate the number of frames in a row after the image loads
-    var self = this;
-    image.onload = function() {
-        framesPerRow = Math.floor(image.width / frameWidth);
-    };
+  
  
-    image.src = path;
-   
-    var currentFrame = 0;  // the current frame to draw
-    var counter = 0;       // keep track of frame rate
+  this.image.src = path;
+  
+  return this;
+  
+}
+
+function animation(spritesheet, frameSpeed, startFrame, endFrame) {
  
-    // Update the animation
-    this.update = function() {
+  var animationSequence = [];  // array holding the order of the animation
+  var currentFrame = 0;        // the current frame to draw
+  var counter = 0;             // keep track of frame rate
+ 
+ 
+  spritesheet.image.onload = function()
+  {
+    spritesheet.framesPerRow = Math.floor(spritesheet.image.width / spritesheet.frameWidth);
+      
+    // create the sequence of frame numbers for the animation
+    for (var frameNumber = startFrame; frameNumber <= endFrame; frameNumber++)
+        animationSequence.push(frameNumber);
+  };
+  // Update the animation
+  this.update = function() {
  
     // update to the next frame if it is time
     if (counter === (frameSpeed - 1))
-      currentFrame = (currentFrame + 1) % endFrame;
+      currentFrame = parseInt((currentFrame + 1) % animationSequence.length);
  
     // update the counter
     counter = (counter + 1) % frameSpeed;
-    };
-    
-    // Draw the current frame
-    this.draw = function(x, y) {
-        // get the row and col of the frame
-        var row = Math.floor(currentFrame / framesPerRow);
-        var col = Math.floor(currentFrame % framesPerRow);
+  };
  
-        game_context.drawImage(
-            image,
-            col * frameWidth, row * frameHeight,
-            frameWidth, frameHeight,
-            x, y,
-            frameWidth, frameHeight);
+  // draw the current frame
+  this.draw = function(x, y) {
+    // get the row and col of the frame
+    var row = parseInt(Math.floor(animationSequence[currentFrame] / spritesheet.framesPerRow));
+    var col = parseInt(Math.floor(animationSequence[currentFrame] % spritesheet.framesPerRow));
+ 
+    game_context.drawImage(
+      spritesheet.image,
+      col * spritesheet.frameWidth, row * spritesheet.frameHeight,
+      spritesheet.frameWidth, spritesheet.frameHeight,
+      x, y,
+      spritesheet.frameWidth, spritesheet.frameHeight);
   };
   
+  return this;
 }
+
+function animationRow(spritesheet, frameSpeed, row) {
+ 
+  var animationSequence = [];  // array holding the order of the animation
+  var currentFrame = 0;        // the current frame to draw
+  var counter = 0;  // keep track of frame rate
+  
+  
+  
+    //spritesheet.framesPerRow = Math.floor(spritesheet.image.width / spritesheet.frameWidth);
+    
+    var startFrame = parseInt(row * spritesheet.framesPerRow);
+    var endFrame = parseInt(startFrame + (spritesheet.framesPerRow - 1));
+ 
+    // create the sequence of frame numbers for the animation
+    for (var frameNumber = startFrame; frameNumber <= endFrame; frameNumber++)
+        animationSequence.push(frameNumber);
+  //};
+  // Update the animation
+  this.update = function() {
+ 
+    // update to the next frame if it is time
+    if (counter === (frameSpeed - 1))
+      currentFrame = parseInt((currentFrame + 1) % animationSequence.length);
+ 
+    // update the counter
+    counter = (counter + 1) % frameSpeed;
+  };
+ 
+  // draw the current frame
+  this.draw = function(x, y) {
+    // get the row and col of the frame
+    var row = parseInt(Math.floor(animationSequence[currentFrame] / spritesheet.framesPerRow));
+    var col = parseInt(Math.floor(animationSequence[currentFrame] % spritesheet.framesPerRow));
+ 
+    game_context.drawImage(
+      spritesheet.image,
+      col * spritesheet.frameWidth, row * spritesheet.frameHeight,
+      spritesheet.frameWidth, spritesheet.frameHeight,
+      x, y,
+      spritesheet.frameWidth, spritesheet.frameHeight);
+  };
+  
+  return this;
+}
+
+function animationRowToFrame(spritesheet, frameSpeed, row, endFrame) {
+ 
+  var animationSequence = [];  // array holding the order of the animation
+  var currentFrame = 0;        // the current frame to draw
+  var counter = 0;  // keep track of frame rate
+  
+  spritesheet.image.onload = function()
+  {
+    spritesheet.framesPerRow = Math.floor(spritesheet.image.width / spritesheet.frameWidth);
+    
+    var startFrame = parseInt(row * spritesheet.framesPerRow);
+  
+    // create the sequence of frame numbers for the animation
+    for (var frameNumber = startFrame; frameNumber <= endFrame; frameNumber++)
+        animationSequence.push(frameNumber);
+  };
+  // Update the animation
+  this.update = function() {
+ 
+    // update to the next frame if it is time
+    if (counter === (frameSpeed - 1))
+      currentFrame = parseInt((currentFrame + 1) % animationSequence.length);
+ 
+    // update the counter
+    counter = (counter + 1) % frameSpeed;
+  };
+ 
+  // draw the current frame
+  this.draw = function(x, y) {
+    // get the row and col of the frame
+    var row = parseInt(Math.floor(animationSequence[currentFrame] / spritesheet.framesPerRow));
+    var col = parseInt(Math.floor(animationSequence[currentFrame] % spritesheet.framesPerRow));
+ 
+    game_context.drawImage(
+      spritesheet.image,
+      col * spritesheet.frameWidth, row * spritesheet.frameHeight,
+      spritesheet.frameWidth, spritesheet.frameHeight,
+      x, y,
+      spritesheet.frameWidth, spritesheet.frameHeight);
+  };
+  
+  return this;
+}
+ 
