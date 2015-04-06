@@ -66,6 +66,9 @@ function Main(){
     };
     
     this.runGameLoop = function(){
+        
+        
+        
         gameLoop = setInterval(function() {
             
             ACTOR_HANDLER.update();
@@ -83,7 +86,7 @@ function Main(){
         
         buttons[0] = new Button("images/defaults/play.png");
         buttons[0].setY(100 + (75 * buttons.length));
-        buttons[0].onClick = this.loadActors();
+        buttons[0].onClick = this.loadActors;
         buttons[1] = new Button("images/defaults/play.png");
         buttons[1].setY(100 + (75 * buttons.length));
         
@@ -92,7 +95,7 @@ function Main(){
     };
     
     this.runMainMenu = function(){
-        gameLoop = setInterval(function() {
+       
             
             //game_context.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
             
@@ -102,7 +105,7 @@ function Main(){
                 button.draw();
             });
                
-        }, 1000/FPS);
+     
     };
     
     var mouseClicked = function(event){
