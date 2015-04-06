@@ -18,7 +18,7 @@
  */
 
 
-function SpriteManager(){
+function SpriteManager(){ 
     var sprites = [];
     /*
      * @params type - 0 = moving animated object

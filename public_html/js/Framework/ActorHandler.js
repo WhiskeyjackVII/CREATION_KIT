@@ -95,6 +95,10 @@ function ActorHandler(){
             actors.splice(index, 1);
         }  
     };
+    
+    this.clearActors = function(){
+        actors = [];
+    };
 
     //COLLISION HANDLING METHODS
 

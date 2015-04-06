@@ -11,6 +11,7 @@
                 <script src="js/Framework/spriteSheet.js" type="text/javascript"></script>
                 <script src="js/Framework/main.js" type="text/javascript"></script>
                 <script src="js/Framework/SpriteManager.js" type="text/javascript"></script>
+                <script src="js/Framework/Button.js" type="text/javascript"></script>
 	</head>
 	<body>
 	
@@ -19,7 +20,7 @@
 		</canvas>
 		
 		<h1>Test</h1>
-		<input type="button" onclick="main.runGameLoop()" value="Run Game">
+		<input type="button" onclick="main.runMainMenu()" value="Run Game">
                 <input type="button" onclick="setup()" value="Setup">
                 
 		<script type='text/javascript'>
@@ -29,20 +30,19 @@
                     
                 function setup(){
                     
-                    
                     main.setup(document.getElementById("gameCanvas"));
                     
                     
                     var flowers = ["","flower_red","flower_blue","flower_green","flower_purple","flower_red"];
-                    var spiders = ["","spider_black","spider_red","spider_blue","spider_green"];
+                    var spiders = ["","spider_black","spider_red","spider_blue","spider_green","spider_black"];
                     
                     main.loadSprites = function(){
                     
-                        for(var i = 1; i <= spiders.length; i++){
+                        for(var i = 1; i <= spiders.length-2; i++){
                             SPRITE_MANAGER.registerSpriteSheet(spiders[i],"images/FotBB/" + spiders[i] + ".png",38,38,1,0);
                         }
                     
-                        for(var i = 1; i <= flowers.length-1; i++){
+                        for(var i = 1; i <= flowers.length-2; i++){
                             SPRITE_MANAGER.registerSpriteSheet(flowers[i],"images/FotBB/" + flowers[i] + ".png",45,45,1,1);
                         }
                     
@@ -52,26 +52,29 @@
                 
                     main.loadCollision = function(){
                         
-                        for(var i = 1; i <= flowers.length-1; i++){
+                        for(var i = 1; i <= flowers.length-2; i++){
                             ACTOR_HANDLER.registerCollisionCheck("PLAYER",flowers[i], new KillCommand(new ScoreCommand(new CollisionAdapterCommand(new CreateActorCommand(flowers[i],new CreateActorCommand(flowers[i+1],null))))));
                         }
-                   
-                    
-                        ACTOR_HANDLER.registerCollisionCheck("PLAYER",spiders[i], new KillCommand(new ScoreCommand(null)));
-                    
+                        
+                        for(var i = 1; i <= flowers.length-2; i++){
+                            for(var j = i; j <= spiders.length-2; j++){
+                                ACTOR_HANDLER.registerCollisionCheck(spiders[j],flowers[i], new KillCommand(new CreateActorCommand(spiders[i+1],null)));
+                            }
+                        }
+                        
+                        for(var i = 1; i <= flowers.length -2; i++){
+                            ACTOR_HANDLER.registerCollisionCheck(spiders[i],"PLAYER", new KillCommand(null));
+                        }
                     };
                 
                     
-                    
-                    
-                    main.loadActors = function(){
-                    
-                        for(var i = 1; i <= spiders.length; i++){
+                    main.registerActors = function(){
+                        for(var i = 1; i <= spiders.length-2; i++){
                         
-                            ACTOR_FACTORY.registerActor(spiders[i],0,3*i,true,SPRITE_MANAGER.getAnimationsFor(spiders[i]),38,38);
+                            ACTOR_FACTORY.registerActor(spiders[i],0,2*i,true,SPRITE_MANAGER.getAnimationsFor(spiders[i]),38,38);
                         }
                 
-                        for(var i = 1; i <= flowers.length-1; i++){
+                        for(var i = 1; i <= flowers.length-2; i++){
                             
                             ACTOR_FACTORY.registerActor(flowers[i],(250*i),0,true,SPRITE_MANAGER.getAnimationsFor(flowers[i]),45,45);
                         }
@@ -79,7 +82,9 @@
                     
                     
                         ACTOR_FACTORY.registerActor("PLAYER",0,7,false,SPRITE_MANAGER.getAnimationsFor("PLAYER"),50,50);
-                
+                    };
+                    
+                    main.loadActors = function(){
                     
                         for(var i = 0; i < 2; i++){
                             ACTOR_HANDLER.registerActor(ACTOR_FACTORY.createActorRandom("spider_black"));

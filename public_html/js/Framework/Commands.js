@@ -197,11 +197,12 @@ CreateActorCommand.prototype.setup = function(actor){
 
 CreateActorCommand.prototype.execute = function(){
     ACTOR_HANDLER.registerActor(ACTOR_FACTORY.createActorRandom(this.type));
-    
-    console.log("HANDLING_ADDITIONAL_COMMAND : "+ Date.now());
-        this.adCommand.setup(this.actor);
-        this.adCommand.execute();
-    console.log("ADDITIONAL_COMMAND_HANDLED : "+ Date.now());
+    if(this.adCommand !== null){
+        console.log("HANDLING_ADDITIONAL_COMMAND : "+ Date.now());
+            this.adCommand.setup(this.actor);
+            this.adCommand.execute();
+        console.log("ADDITIONAL_COMMAND_HANDLED : "+ Date.now());
+    }
     
 };
 

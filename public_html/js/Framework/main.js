@@ -29,14 +29,19 @@ var game_context;
 var ACTOR_FACTORY;
 var SPRITE_MANAGER;
 
+
 var spritesLoading = 0;
 var preloadedSprites = 0;
 
 function Main(){
-                    
-    this.setup = function(canvas,context){
-        game_canvas = canvas;
     
+    var buttons = [];
+                    
+    this.setup = function(canvas){
+        game_canvas = canvas;
+        
+        
+        
         game_context = game_canvas.getContext("2d");
         ACTOR_HANDLER = new ActorHandler();
         ACTOR_FACTORY = new ActorFactory();
@@ -44,6 +49,8 @@ function Main(){
         
         CANVAS_WIDTH = game_canvas.width;
         CANVAS_HEIGHT = game_canvas.height;
+        
+        
     };
     
     this.init = function(){
@@ -52,7 +59,9 @@ function Main(){
         
         this.loadCollision();
         
-        this.loadActors();
+        this.registerActors();
+        
+        this.mainMenu();
         
     };
     
@@ -67,9 +76,56 @@ function Main(){
         }, 1000/FPS);
     };
     
+    this.mainMenu = function(){
+        
+        
+        
+        
+        buttons[0] = new Button("images/defaults/play.png");
+        buttons[0].setY(100 + (75 * buttons.length));
+        buttons[0].onClick = this.loadActors();
+        buttons[1] = new Button("images/defaults/play.png");
+        buttons[1].setY(100 + (75 * buttons.length));
+        
+        
+        
+    };
+    
+    this.runMainMenu = function(){
+        gameLoop = setInterval(function() {
+            
+            //game_context.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+            
+            game_canvas.addEventListener("mousedown",mouseClicked,false);
+            
+            buttons.forEach(function(button){
+                button.draw();
+            });
+               
+        }, 1000/FPS);
+    };
+    
+    var mouseClicked = function(event){
+            
+            
+            buttons.forEach(function(button){
+                if(button.getX() < event.pageX && button.getX() + button.getWidth() > event.pageX){
+                    if(button.getY() < event.pageY && button.getY() + button.getHeight() > event.pageY){
+                        button.onClick();
+                    }
+                }
+            });
+        };
+        
+        this.registerButton = function(button){
+            buttons.push(button);
+        };
+    
     this.loadSprites = function(){};
     
     this.loadCollision = function(){};
+    
+    this.registerActors = function(){};
     
     this.loadActors = function(){};
     
