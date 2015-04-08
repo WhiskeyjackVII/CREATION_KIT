@@ -9,8 +9,10 @@ function ActorHandler(){
     var players = [];
     var collisionPairs = [];
     var keySets = [];
-    var scoreReached;
 
+//    collisionPairs[0] = [];
+//    collisionPairs[1] = [];
+//    collisionPairs[2] = [];
     
     //DEFAULT KEYSETS
     
@@ -66,12 +68,7 @@ function ActorHandler(){
     };
     
     //ACTOR MANAGMENT METHODS
-    
-    
-    this.getScoreReached = function(){
-        return scoreReached;
-    };
-    
+
     this.registerActor = function(actor){
         console.log("REGISTING ACTOR : "+ Date.now());
         actors.push(actor);
@@ -81,7 +78,7 @@ function ActorHandler(){
     };
     this.registerPlayer = function(player,playerNumber){
         console.log("REGISTERING_PLAYER : " + Date.now());
-        playersAlive++;
+        
         actors.push(player);
         players.push(player);
         
@@ -93,10 +90,6 @@ function ActorHandler(){
         console.log("PLAYER REGISTERED : " + Date.now());
     };
     var deleteActor = function(actor){
-        if(actor.getName() === "PLAYER"){
-            scoreReached = actor.getScore();
-            playersAlive--;
-        }
         var index = actors.indexOf(actor);
         if (index > -1) {
             actors.splice(index, 1);
@@ -112,6 +105,8 @@ function ActorHandler(){
     var handleCollisionPairs = function(actorOne){
         collisionPairs.forEach(function(pair){
         
+        //var countType = 0;
+        //hitTypes.forEach(function(pair){
 
             if(actorOne.getName() === pair[0]){
                 actors.forEach(function(actorTwo){
@@ -122,15 +117,20 @@ function ActorHandler(){
                         
                         if(detectCollision(actorOne,actorTwo) === true){
                             console.log("HANDLING COLLISION : "+ Date.now());
+                                //var hitType = detectCollisionSide(actorOne,actorTwo);
+                                //if(hitType === countType || hitType === 0){
                                     pair[2].setup(actorOne,actorTwo);
                                     pair[2].execute();
+                                //}
                             console.log("COLLISION HANDLED : "+ Date.now());
                         }
                     }
 
                 });
             }
+            //countType++;
         });
+        //});
     };
     
     this.registerCollisionCheck = function(actorOne, actorTwo, command){
@@ -148,19 +148,42 @@ function ActorHandler(){
         return false;
     };
     
-
+//    var detectCollisionSide = function(actorOne, actorTwo){
+//        
+//        var w = 0.5 * (actorOne.width() + actorTwo.width());
+//        var h = 0.5 * (actorOne.height() + actorTwo.height());
+//        var dx = A.centerX() - B.centerX();
+//        var dy = A.centerY() - B.centerY();
+//
+//        if (abs(dx) <= w && abs(dy) <= h)
+//        {
+//            /* collision! */
+//            var wy = w * dy;
+//            var hx = h * dx;
+//
+//        if (wy > hx){
+//            if (wy > -hx){
+//                /* collision at the top */
+//                return 2;
+//            }else{
+//                /* on the left */
+//                return 1;
+//            }
+//        }else{
+//            if (wy > -hx){
+//                /* on the right */
+//                return 1;
+//            }else{
+//                /* at the bottom */
+//                return 2;
+//            }
+//        }
+//        
+//        }
+//    };
     
     
     //RUNNING METHODS
-    
-    this.gameOverCondition = function(){
-        var result = false;
-        if(playersAlive <= 0){
-            result = true;
-        }
-        
-        return result;
-    };
     
     this.drawActors = function(){
 
@@ -176,6 +199,7 @@ function ActorHandler(){
             if(Key.isDown(i))
                 keyCommands[i].execute();
         }
+        
         actors.forEach(function(actor){
             if(actor.checkAlive() === false){
                 deleteActor(actor);
@@ -183,7 +207,8 @@ function ActorHandler(){
             }else{
                 actor.update();
                 handleCollisionPairs(actor);
-                
+
+
             }
         });
     };

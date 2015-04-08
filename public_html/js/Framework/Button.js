@@ -29,11 +29,7 @@ function Button(image){
     this.image.onload = function(){
         setWidth(this.width);
         setHeight(this.height);
-        if(getX() > 0){
-            
-        }else{
-            setX((CANVAS_WIDTH/2) - (width/2));
-        }
+        setX((CANVAS_WIDTH/2) - (width/2));
     };
     
     this.setY = function(newY){
@@ -42,14 +38,8 @@ function Button(image){
     var setX = function(newX){
         x = newX;
     };
-    this.setX = function(newX){
-        x = newX;
-    };
     
     this.getX = function(){
-        return x;
-    };
-    var getX = function(){
         return x;
     };
     this.getY = function(){
