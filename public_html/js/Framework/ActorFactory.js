@@ -24,8 +24,8 @@ function ActorFactory(){
     
     var actorLists = [];
     
-    this.registerActor = function(name, score, speed, constantMovement, image){
-        var temp = [name,score,speed,constantMovement,image];
+    this.registerActor = function(name, score, speed, constantMovement, spritesheet, width, height){
+        var temp = [name,score,speed,constantMovement,spritesheet, width, height];
         
         actorLists.push(temp);
     };
@@ -34,7 +34,7 @@ function ActorFactory(){
         var temp;
         actorLists.forEach(function(actor){
             if(name === actor[0]){
-                temp = new Actor(name, posX, posY, actor[1], actor[2],actor[3], actor[4]);
+                temp = new Actor(name, posX, posY, actor[1], actor[2],actor[3], actor[4], actor[5], actor[6]);
         
                 
             }
@@ -46,7 +46,7 @@ function ActorFactory(){
         var temp;
         actorLists.forEach(function(actor){
             if(name === actor[0]){
-                temp = new Actor(name, getRandomPosX(), getRandomPosY(), actor[1], actor[2],actor[3], actor[4]);
+                temp = new Actor(name, getRandomPosX(), getRandomPosY(), actor[1], actor[2],actor[3], actor[4], actor[5], actor[6]);
             
                 
             }

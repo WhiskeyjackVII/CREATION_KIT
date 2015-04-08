@@ -179,6 +179,33 @@ BounceTwoActors.prototype.execute = function(){
     console.log("BOUNCE_TWO_HANDLED");
 };
 
+//////////CREATE_ACTOR_COMMAND///////////////////////////////////////////////
+
+CreateActorCommand.prototype = new I_Command(null);
+CreateActorCommand.constructor = CreateActorCommand;
+function CreateActorCommand(type,adCommand){
+    var actor;
+    
+    this.type = type;
+    this.adCommand = adCommand;
+}
+
+CreateActorCommand.prototype.setup = function(actor){
+    this.actor = actor;
+    
+};
+
+CreateActorCommand.prototype.execute = function(){
+    ACTOR_HANDLER.registerActor(ACTOR_FACTORY.createActorRandom(this.type));
+    if(this.adCommand !== null){
+        console.log("HANDLING_ADDITIONAL_COMMAND : "+ Date.now());
+            this.adCommand.setup(this.actor);
+            this.adCommand.execute();
+        console.log("ADDITIONAL_COMMAND_HANDLED : "+ Date.now());
+    }
+    
+};
+
 //////////BASE_MOVEMENT_COMMAND///////////////////////////////////////////////
 
 MoveCommand.prototype = new I_Command(null);

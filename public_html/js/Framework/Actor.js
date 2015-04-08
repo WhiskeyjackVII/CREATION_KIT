@@ -1,6 +1,6 @@
 // @author betts.euan@yahoo.com
 Actor.constructor = Actor;
-function Actor(name, posX, posY, score, speed, constantMovement, image){
+function Actor(name, posX, posY, score, speed, constantMovement, animations, width, height){
 	
     console.log("MAKING ACTOR : " + Date.now());
         
@@ -14,21 +14,15 @@ function Actor(name, posX, posY, score, speed, constantMovement, image){
     var alive = true;
     var dx = 1;
     var dy = 1;
-    var width;
-    var height;
+    var width = width;
+    var height = height;
     var posX = posX;
     var posY = posY;
     var speed = speed;
     var name = name;
+    var animations = animations;
     
-    //IMAGE METHODS
-    
-    var imageObj = new Image();
-    imageObj.onload = function() {
-           width = this.width;
-           height = this.height;
-    };
-    imageObj.src = image;
+ 
     
     //IDENTIFYING METHOD
     
@@ -116,18 +110,69 @@ function Actor(name, posX, posY, score, speed, constantMovement, image){
         
     this.drawActor = function(){
         if(alive === true){
-            game_context.drawImage(imageObj, posX, posY);
+            //game_context.drawImage(imageObj, posX, posY);
+            
+            if(dx === 0 || speed === 0){
+                if(dy === 0 || speed === 0){
+                    animations[0].update();
+                    animations[0].draw(this.getPosX(),this.getPosY());
+                    }else{
+                        if( dy < 0){
+                            animations[0].update();
+                            animations[0].draw(this.getPosX(),this.getPosY());
+                        }else{
+                            animations[3].update();
+                            animations[3].draw(this.getPosX(),this.getPosY());
+                        }
+                    }
+            }else{
+                if(dx < 0){
+                    if(dy === 0){
+                        animations[2].update();
+                        animations[2].draw(this.getPosX(),this.getPosY());
+                    }else{
+                        if( dy < 0){
+                            animations[0].update();
+                            animations[0].draw(this.getPosX(),this.getPosY());
+                        }else{
+                            animations[3].update();
+                            animations[3].draw(this.getPosX(),this.getPosY());
+                        }
+                    }
+                }else{
+                    if(dy === 0){
+                        animations[1].update();
+                        animations[1].draw(this.getPosX(),this.getPosY());
+                    }else{
+                        if( dy < 0){
+                            animations[0].update();
+                            animations[0].draw(this.getPosX(),this.getPosY());
+                        }else{
+                            animations[3].update();
+                            animations[3].draw(this.getPosX(),this.getPosY());
+                        }
+                    }
+                }
+            }
+            
+            if(constantMovement !== true){
+                dx = 0;
+                dy = 0;
+            }
         }
     };
 
     this.update = function(){
-	bounds();
+	
+        bounds();
+        
         posX = Number(posX) + Number(dx*speed);
 	posY = Number(posY) + Number(dy*speed);
-        if(constantMovement !== true){
-            dx = 0;
-            dy = 0;
-        }
+        
+        
+        
+        
+        
     };
 	
     var bounds = function(){

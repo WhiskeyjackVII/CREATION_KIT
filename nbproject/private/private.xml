@@ -3,13 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/euan/git/CREATION_KIT/public_html/js/Framework/ActorFactory.js</file>
             <file>file:/C:/Users/euan/git/CREATION_KIT/public_html/js/Framework/Actor.js</file>
+            <file>file:/C:/Users/euan/git/CREATION_KIT/public_html/js/Framework/main.js</file>
             <file>file:/C:/Users/euan/git/CREATION_KIT/public_html/creationStyle.css</file>
             <file>file:/C:/Users/euan/git/CREATION_KIT/public_html/js/Framework/ActorHandler.js</file>
             <file>file:/C:/Users/euan/git/CREATION_KIT/public_html/index.html</file>
+            <file>file:/C:/Users/euan/git/CREATION_KIT/public_html/js/Framework/spriteSheet.js</file>
             <file>file:/C:/Users/euan/git/CREATION_KIT/public_html/actorCreater.html</file>
             <file>file:/C:/Users/euan/git/CREATION_KIT/public_html/js/Framework/Commands.js</file>
+            <file>file:/C:/Users/euan/git/CREATION_KIT/public_html/js/Framework/SpriteManager.js</file>
         </group>
     </open-files>
 </project-private>
